@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bug in Safari with opened dev tools</title>
+</head>
+<body>
+    <div id="some"></div>
+</body>
+<script>
+    const sandbox = document.createElement('iframe');
+    const el = document.getElementById('some');
+    el.appendChild(sandbox);
+    const onClose = () => {
+        // setTimeout(() => el.innerHTML = '',0); // Костыле фикс бага
+        el.innerHTML = ''; // Крэшит сафари с открытыми дев тулзами
+    }
+    sandbox.contentDocument.open();
+    sandbox.contentWindow.addEventListener('message', onClose);
+    sandbox.contentDocument.write('<iframe src="./frame.html"></iframe>');
+    sandbox.contentDocument.close();
+</script>
+</html>
